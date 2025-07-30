@@ -129,7 +129,7 @@ class $modify(jdMS, ProfilePage) {
                     ->setGap(3.f)
                     ->setAutoScale(true)
                     ->setAxisReverse(true)
-                    ->setCrossAxisOverflow(true);
+                    ->setCrossAxisOverflow(true)
             );
 
         });
