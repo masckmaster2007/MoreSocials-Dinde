@@ -28,7 +28,7 @@ static const std::vector<Social> socials = {
     //{"pinterest",  "pinterest.png",  true}, (dead)
     //{"rumble",     "rumble.png",     true}, (99% of geode will kill me for this)
     //{"snapchat",   "snapchat.png",   true}, (dream)
-    //{"telegram",   "telegram.png",   true} (home of the truly awesome and cool racist 14 year old randoms. :skull: :skull: :skull: :skull: /j)
+    //{"telegram",   "telegram.png",   true}, (home of the truly awesome and cool racist 14 year old randoms. :skull: :skull: :skull: :skull: /j)
     //{"linkedin",   "linkedin.png",   true}, (i forgot ppl dont know how to get a job)
     //{"mastodon",   "mastodon.png",   true}, (dead)
     //{"patreon",    "patreon.png",    true}, (cough cough)
@@ -58,7 +58,7 @@ class $modify(jdMS, ProfilePage) {
             .userAgent("MoreSocials 1.0 (Geode)")
             .timeout(std::chrono::seconds(10))
             .get("https://api.jarvisdevil.com/socials/get.php?accountID=" +
-                 std::to_string(score->m_accountID));
+                 geode::utils::numToString(score->m_accountID));
 
         m_fields->listener.bind([this, score](web::WebTask::Event* ev) {
             auto maybe = ev->getValue();
@@ -69,7 +69,7 @@ class $modify(jdMS, ProfilePage) {
 
             auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
             if (!robsocials) return;
-            if (getChildByIDRecursive("jarvisdevil.moresocials/more-socials-menu")) { return; } // wah wah wah
+            if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
@@ -91,7 +91,7 @@ class $modify(jdMS, ProfilePage) {
                     if (info.key == key) {
                         CCSprite* spr = nullptr;
                         if (info.isCustom) {
-                            spr = CCSprite::create((""_spr + info.png).c_str());
+                            spr = CCSprite::create(fmt::format("{}"_spr, info.png).c_str());
                         } else {
                             spr = CCSprite::createWithSpriteFrameName(info.png.c_str());
                         }
@@ -100,7 +100,7 @@ class $modify(jdMS, ProfilePage) {
                         auto item = CCMenuItemSpriteExtra::create(
                             spr, this, menu_selector(jdMS::onSocial)
                         );
-                        item->setID((info.key + "_social").c_str());
+                        item->setID(fmt::format("{}_social", info.key).c_str());
                         item->setUserObject(CCString::create(link));
                         item->setPositionY(-y);
                         y += spr->getContentSize().height + 3.f;
@@ -119,10 +119,12 @@ class $modify(jdMS, ProfilePage) {
                         more, this, menu_selector(jdMS::onMore)
                     );
                     moresocials->addChild(moreBtn);
+                    moreBtn->setID("more-socials-button"_spr);
                 }
             }
 
-            moresocials->alignItemsVerticallyWithPadding(3.f);
+            // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use dated cocos functions. geode::Layout* existed for a reason dammit
+
         });
 
         m_fields->listener.setFilter(task);
@@ -132,10 +134,10 @@ class $modify(jdMS, ProfilePage) {
         geode::createQuickPopup(
             "MoreSocials",
             "If you want to edit your socials, head over to https://id.jarvisdevil.com.\n\n<cb>Like my mods? Support me by joining my Discord Server: https://dsc.gg/devlin</c>",
-            "OK",
             "Nah",
+            "OK",
             [](auto, bool btn2) {
-                if (!btn2) {
+                if (btn2) {
                     web::openLinkInBrowser("https://id.jarvisdevil.com");
                 }
             }

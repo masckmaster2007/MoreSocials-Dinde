@@ -2,6 +2,8 @@
 	"geode": "4.6.2",
 	"gd": {
 		"win": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074",
 		"android": "2.2074"
 	},
 	"id": "jarvisdevil.moresocials",
@@ -10,10 +12,7 @@
 	"developer": "jarvisdevil",
 	"description": "Adds more socials to profiles!",
 	"dependencies": {
-		"geode.node-ids": {
-			"version": ">=1.21.1",
-			"importance": "required"
-		}
+		"geode.node-ids": ">=1.21.1"
 	},
 	"resources": {
 		"sprites": [
