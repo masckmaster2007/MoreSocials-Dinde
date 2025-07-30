@@ -16,33 +16,33 @@ static const std::vector<Social> socials = {
     // if anyone sees this and wants me to add some of these back just dm me on discord (@jarvisdevlin)
     // i dont see any usage of most of these so i just removed them for now or they are going to get me killed
 
-    {"discord",  "gj_discordIcon_001.png", false},
-    {"reddit",   "gj_rdIcon_001.png",     false},
-    //{"facebook", "gj_fbIcon_001.png",     false}, (god damn no)
-    {"tiktok",   "tiktok.png",       true},
-    {"bluesky",  "bluesky.png",      true},
-    //{"deviantart", "deviantart.png", true}, (people will start linking their nsfw so hell naw brother)
-    {"github",     "github.png",     true},
-    //{"gitlab",     "gitlab.png",     true}, (ehh)
-    {"instagram",  "instagram.png",  true},
-    //{"pinterest",  "pinterest.png",  true}, (dead)
-    //{"rumble",     "rumble.png",     true}, (99% of geode will kill me for this)
-    //{"snapchat",   "snapchat.png",   true}, (dream)
-    //{"telegram",   "telegram.png",   true}, (home of the truly awesome and cool racist 14 year old randoms. :skull: :skull: :skull: :skull: /j)
-    //{"linkedin",   "linkedin.png",   true}, (i forgot ppl dont know how to get a job)
-    //{"mastodon",   "mastodon.png",   true}, (dead)
-    //{"patreon",    "patreon.png",    true}, (cough cough)
-    //{"soundcloud", "soundcloud.png", true}, (planned)
-    //{"spotify",    "spotify.png",    true}, (how)
-    //{"threads",    "threads.png",    true}, (what)
-    //{"tumblr",     "tumblr.png",     true}, (dead)
-    //{"vimeo",      "vimeo.png",      true}, (dead)
-    //{"vk",         "vk.png",         true}, (yeah uhhhh no)
-    //{"bandlab",    "bandlab.png",    true}, (do i even need to explain this one)
-    //{"roblox",     "roblox.png",     true}, (teddy)
-    //{"steam",      "steam.png",      true}, (sure)
-    //{"itchio",     "itchio.png",     true}, (sure)
-    //{"kofi",       "kofi.png",       true}, (at least its better then patreon)
+    {"discord",      "gj_discordIcon_001.png", false},
+    {"reddit",       "gj_rdIcon_001.png",      false},
+    //{"facebook",     "gj_fbIcon_001.png",      false}, (god damn no)
+    {"tiktok",       "tiktok.png",             true},
+    {"bluesky",      "bluesky.png",            true},
+    //{"deviantart",   "deviantart.png",         true}, (people will start linking their nsfw so hell naw brother)
+    {"github",       "github.png",             true},
+    //{"gitlab",       "gitlab.png",             true}, (ehh)
+    {"instagram",    "instagram.png",          true},
+    //{"pinterest",    "pinterest.png",          true}, (dead)
+    //{"rumble",       "rumble.png",             true}, (99% of geode will kill me for this)
+    //{"snapchat",     "snapchat.png",           true}, (dream)
+    //{"telegram",     "telegram.png",           true}, (home of the truly awesome and cool racist 14 year old randoms. :skull: :skull: :skull: :skull: /j)
+    //{"linkedin",     "linkedin.png",           true}, (i forgot ppl dont know how to get a job)
+    //{"mastodon",     "mastodon.png",           true}, (dead)
+    //{"patreon",      "patreon.png",            true}, (cough cough)
+    //{"soundcloud",   "soundcloud.png",         true}, (planned)
+    //{"spotify",      "spotify.png",            true}, (how)
+    //{"threads",      "threads.png",            true}, (what)
+    //{"tumblr",       "tumblr.png",             true}, (dead)
+    //{"vimeo",        "vimeo.png",              true}, (dead)
+    //{"vk",           "vk.png",                 true}, (yeah uhhhh no)
+    //{"bandlab",      "bandlab.png",            true}, (do i even need to explain this one)
+    //{"roblox",       "roblox.png",             true}, (teddy)
+    //{"steam",        "steam.png",              true}, (sure)
+    //{"itchio",       "itchio.png",             true}, (sure)
+    //{"kofi",         "kofi.png",               true}, (at least its better then patreon)
     // rec room would be funny to add here (rec.net or smth idk)
 };
 
@@ -57,8 +57,7 @@ class $modify(jdMS, ProfilePage) {
         auto task = web::WebRequest()
             .userAgent("MoreSocials 1.0 (Geode)")
             .timeout(std::chrono::seconds(10))
-            .get("https://api.jarvisdevil.com/socials/get.php?accountID=" +
-                 geode::utils::numToString(score->m_accountID));
+            .get(fmt::format("https://api.jarvisdevil.com/socials/get.php?accountID={}", score->m_accountID));
 
         m_fields->listener.bind([this, score](web::WebTask::Event* ev) {
             auto maybe = ev->getValue();
@@ -75,7 +74,8 @@ class $modify(jdMS, ProfilePage) {
             moresocials->setID("more-socials-menu"_spr);
             moresocials->setPosition(robsocials->getPositionX() + 40,
                                     robsocials->getPositionY() - 75); // might do better later
-            this->addChild(moresocials);
+            moresocials->setContentWidth(28.f);
+            this->m_mainLayer->addChild(moresocials);
 
             float y = 0.f;
             std::istringstream ss(body);
@@ -123,7 +123,7 @@ class $modify(jdMS, ProfilePage) {
                 }
             }
 
-            // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use dated cocos functions. geode::Layout* existed for a reason dammit
+            // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
 
         });
 
