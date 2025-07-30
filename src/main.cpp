@@ -72,9 +72,8 @@ class $modify(jdMS, ProfilePage) {
 
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
-            moresocials->setPosition(robsocials->getPositionX() + 40,
-                                    robsocials->getPositionY() - 75); // might do better later
-            moresocials->setContentWidth(28.f);
+            moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
+            moresocials->setContentSize({28.f, 290.f});
             this->m_mainLayer->addChild(moresocials);
 
             float y = 0.f;
@@ -102,8 +101,8 @@ class $modify(jdMS, ProfilePage) {
                         );
                         item->setID(fmt::format("{}_social", info.key).c_str());
                         item->setUserObject(CCString::create(link));
-                        item->setPositionY(-y);
-                        y += spr->getContentSize().height + 3.f;
+                        // item->setPositionY(-y);
+                        // y += spr->getContentSize().height + 3.f;
                         moresocials->addChild(item);
                         break;
                     }
@@ -124,6 +123,14 @@ class $modify(jdMS, ProfilePage) {
             }
 
             // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
+
+            moresocials->setLayout(
+                geode::ColumnLayout::create()
+                    ->setGap(3.f)
+                    ->setAutoScale(true)
+                    ->setAxisReverse(true)
+                    ->setCrossAxisOverflow(true);
+            );
 
         });
 
