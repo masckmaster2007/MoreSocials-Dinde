@@ -79,11 +79,10 @@ class $modify(jdMS, ProfilePage) {
             moresocials->setID("more-socials-menu"_spr);
             if (!tooNarrow) {
                 moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
-                moresocials->setContentSize({28.f, 290.f});
+                moresocials->setContentHeight(290.f);
             } else {
-                moresocials->setPosition(robsocials->getPositionX() + 21, this->m_mainLayer->getContentHeight());
-                moresocials->setContentSize({400.f, 28.f});
-                moresocials->setAnchorPoint({1.f, .5f});
+                moresocials->setPosition(robsocials->getPositionX() + 21, this->m_mainLayer->getContentHeight() + 30);
+                moresocials->setContentWidth(400.f);
             }
             this->m_mainLayer->addChild(moresocials);
 
@@ -148,9 +147,11 @@ class $modify(jdMS, ProfilePage) {
                     geode::RowLayout::create()
                         ->setGap(3.f)
                         ->setAutoScale(true)
-                        ->setAxisReverse(false)
+                        ->setAxisReverse(true)
                         ->setCrossAxisOverflow(true)
+                        ->setAxisAlignment(AxisAlignment::Start)
                 );
+                moresocials->setAnchorPoint({1.f, 0.f});
             }
 
         });
