@@ -66,14 +66,25 @@ class $modify(jdMS, ProfilePage) {
             std::string body = maybe->string().unwrapOr("");
             //if (body.empty()) return;
 
+            auto bg = this->m_mainLayer->getChildByID("background");
+
+            if (!bg) return;
             auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
             if (!robsocials) return;
             if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
+            bool tooNarrow = bg->getContentWidth() + 15.f < this->getContentWidth();
+
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
-            moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
-            moresocials->setContentSize({28.f, 290.f});
+            if (!tooNarrow) {
+                moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
+                moresocials->setContentSize({28.f, 290.f});
+            } else {
+                moresocials->setPosition(robsocials->getPositionX() + 21, this->m_mainLayer->getContentHeight());
+                moresocials->setContentSize({400.f, 28.f});
+                moresocials->setAnchorPoint({1.f, .5f});
+            }
             this->m_mainLayer->addChild(moresocials);
 
             float y = 0.f;
@@ -124,13 +135,23 @@ class $modify(jdMS, ProfilePage) {
 
             // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
 
-            moresocials->setLayout(
-                geode::ColumnLayout::create()
-                    ->setGap(3.f)
-                    ->setAutoScale(true)
-                    ->setAxisReverse(true)
-                    ->setCrossAxisOverflow(true)
-            );
+            if (!tooNarrow) {
+                moresocials->setLayout(
+                    geode::ColumnLayout::create()
+                        ->setGap(3.f)
+                        ->setAutoScale(true)
+                        ->setAxisReverse(true)
+                        ->setCrossAxisOverflow(true)
+                );
+            } else {
+                moresocials->setLayout(
+                    geode::RowLayout::create()
+                        ->setGap(3.f)
+                        ->setAutoScale(true)
+                        ->setAxisReverse(false)
+                        ->setCrossAxisOverflow(true)
+                );
+            }
 
         });
 
