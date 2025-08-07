@@ -66,19 +66,17 @@ class $modify(jdMS, ProfilePage) {
             std::string body = maybe->string().unwrapOr("");
             //if (body.empty()) return;
 
-            auto bg = this->m_mainLayer->getChildByID("background");
-
-            if (!bg) return;
             auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
             if (!robsocials) return;
             if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
-            bool tooNarrow = bg->getContentWidth() + 15.f > this->getContentWidth(); // 15 is one half of 30, the estimated width for original vertical variant of the menu
+            float intendedXPos = robsocials->getPositionX() + 40;
+            bool tooNarrow = intendedXPos > this->getContentWidth();
 
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
             if (!tooNarrow) {
-                moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
+                moresocials->setPosition(intendedXPos, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
                 moresocials->setContentHeight(290.f); // content width gets handled by layout later
             } else {
                 moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 38);
