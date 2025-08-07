@@ -73,7 +73,7 @@ class $modify(jdMS, ProfilePage) {
             if (!robsocials) return;
             if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
-            bool tooNarrow = bg->getContentWidth() + 15.f < this->getContentWidth(); // 15 is one half of 30, the estimated width for original vertical variant of the menu
+            bool tooNarrow = bg->getContentWidth() + 15.f > this->getContentWidth(); // 15 is one half of 30, the estimated width for original vertical variant of the menu
 
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
