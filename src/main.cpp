@@ -73,7 +73,7 @@ class $modify(jdMS, ProfilePage) {
             if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
             float intendedXPos = robsocials->getPositionX() + 40;
-            bool tooNarrow = intendedXPos > this->getContentWidth();
+            bool tooNarrow = intendedXPos + 15.f > this->getContentWidth();
 
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
