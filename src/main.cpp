@@ -81,7 +81,7 @@ class $modify(jdMS, ProfilePage) {
                 moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
                 moresocials->setContentHeight(290.f);
             } else {
-                moresocials->setPosition(robsocials->getPositionX() + 21, this->m_mainLayer->getContentHeight() + 30);
+                moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 30);
                 moresocials->setContentWidth(400.f);
             }
             this->m_mainLayer->addChild(moresocials);
@@ -149,7 +149,7 @@ class $modify(jdMS, ProfilePage) {
                         ->setAutoScale(true)
                         ->setAxisReverse(true)
                         ->setCrossAxisOverflow(true)
-                        ->setAxisAlignment(AxisAlignment::Start)
+                        ->setAxisAlignment(AxisAlignment::End)
                 );
                 moresocials->setAnchorPoint({1.f, 0.f});
             }
