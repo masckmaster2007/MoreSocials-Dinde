@@ -72,7 +72,7 @@ class $modify(jdMS, ProfilePage) {
             if (!robsocials) return;
             if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
 
-            float intendedXPos = robsocials->getPositionX() + 40;
+            float intendedXPos = robsocials->getPositionX() + 40.f;
             bool tooNarrow = intendedXPos + 15.f > this->getContentWidth();
 
             auto moresocials = CCMenu::create();
@@ -81,7 +81,7 @@ class $modify(jdMS, ProfilePage) {
                 moresocials->setPosition(intendedXPos, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
                 moresocials->setContentHeight(290.f); // content width gets handled by layout later
             } else {
-                moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 38);
+                moresocials->setPosition(robsocials->getPositionX() + 21.f, bg->getContentHeight() + 38.f);
                 moresocials->setContentWidth(400.f); // content height gets handled by layout later
             }
             this->m_mainLayer->addChild(moresocials);
