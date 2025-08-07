@@ -79,10 +79,10 @@ class $modify(jdMS, ProfilePage) {
             moresocials->setID("more-socials-menu"_spr);
             if (!tooNarrow) {
                 moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
-                moresocials->setContentHeight(290.f);
+                moresocials->setContentHeight(290.f); // content width gets handled by layout later
             } else {
-                moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 30);
-                moresocials->setContentWidth(400.f);
+                moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 40);
+                moresocials->setContentWidth(400.f); // content height gets handled by layout later
             }
             this->m_mainLayer->addChild(moresocials);
 
