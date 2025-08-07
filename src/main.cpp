@@ -78,7 +78,7 @@ class $modify(jdMS, ProfilePage) {
             auto moresocials = CCMenu::create();
             moresocials->setID("more-socials-menu"_spr);
             if (!tooNarrow) {
-                moresocials->setPosition(robsocials->getPositionX() + 40, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
+                moresocials->setPosition(intendedXPos, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
                 moresocials->setContentHeight(290.f); // content width gets handled by layout later
             } else {
                 moresocials->setPosition(robsocials->getPositionX() + 21, bg->getContentHeight() + 38);
