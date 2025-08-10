@@ -8,7 +8,7 @@
 	},
 	"id": "jarvisdevil.moresocials",
 	"name": "MoreSocials",
-	"version": "v1.0.0",
+	"version": "v1.1.0",
 	"developer": "jarvisdevil",
 	"description": "Adds more socials to profiles!",
 	"dependencies": {
@@ -27,3 +27,4 @@
 		"customization"
 	]
 }
+
