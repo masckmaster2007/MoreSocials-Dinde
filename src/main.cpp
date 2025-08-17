@@ -57,7 +57,7 @@ class $modify(jdMS, ProfilePage) {
         auto task = web::WebRequest()
             .userAgent("MoreSocials 1.0 (Geode)")
             .timeout(std::chrono::seconds(10))
-            .get(fmt::format("https://api.jarvisdevil.com/socials/get.php?accountID={}", score->m_accountID));
+            .get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID));
 
         m_fields->listener.bind([this, score](web::WebTask::Event* ev) {
             auto maybe = ev->getValue();
@@ -161,13 +161,13 @@ class $modify(jdMS, ProfilePage) {
 
     void onMore(CCObject*) {
         geode::createQuickPopup(
-            "MoreSocials",
-            "If you want to edit your socials, head over to https://id.jarvisdevil.com.\n\n<cb>Like my mods? Support me by joining my Discord Server: https://dsc.gg/devlin</c>",
+            "More Dinde Socials",
+            "If you want to edit your socials, head over to https://gdps.dimisaio.be and click up right to your username, then on profile, then on the gear icon!.\n\n<cb>Thank jarvisdevil for the original mod! Support him => https://dsc.gg/devlin</c>\n\nDindeGDPS Discord: https://dsc.gg/dinde",
             "Nah",
             "OK",
             [](auto, bool btn2) {
                 if (btn2) {
-                    web::openLinkInBrowser("https://id.jarvisdevil.com");
+                    web::openLinkInBrowser("https://gdps.dimisaio.be");
                 }
             }
         );

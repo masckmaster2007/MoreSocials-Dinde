@@ -1,12 +1,12 @@
 {
-	"geode": "4.6.2",
+	"geode": "4.7.0",
 	"gd": {
 		"win": "2.2074",
 		"mac": "2.2074",
 		"ios": "2.2074",
 		"android": "2.2074"
 	},
-	"id": "jarvisdevil.moresocials",
+	"id": "jarvisdevil.moredindesocials",
 	"name": "MoreSocials",
 	"version": "v1.1.0",
 	"developer": "jarvisdevil",
