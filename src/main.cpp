@@ -48,25 +48,19 @@ static const std::vector<Social> socials = {
 
 class $modify(jdMS, ProfilePage) {
     struct Fields {
-        EventListener<web::WebTask> listener;
+        async::TaskHolder<web::WebResponse> listener;
     };
 
     void loadPageFromUserInfo(GJUserScore* score) {
         ProfilePage::loadPageFromUserInfo(score);
 
-        auto task = web::WebRequest()
-            .userAgent("MoreSocials 1.0 (Geode)")
-            .timeout(std::chrono::seconds(10))
-            .get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID));
+        m_fields->listener.spawn(
+			req.get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID)),
+			[](web::WebResponse maybe) {
+				if (!maybe || !maybe->ok()) return;
+                std::string body = maybe.string().unwrapOr("");
 
-        m_fields->listener.bind([this, score](web::WebTask::Event* ev) {
-            auto maybe = ev->getValue();
-            if (!maybe || !maybe->ok()) return;
-
-            std::string body = maybe->string().unwrapOr("");
-            //if (body.empty()) return;
-
-            auto bg = this->m_mainLayer->getChildByID("background");
+                auto bg = this->m_mainLayer->getChildByID("background");
             if (!bg) return;
             auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
             if (!robsocials) return;
@@ -153,10 +147,8 @@ class $modify(jdMS, ProfilePage) {
                 );
                 moresocials->setAnchorPoint({1.f, 0.f});
             }
-
-        });
-
-        m_fields->listener.setFilter(task);
+			}
+		);
     }
 
     void onMore(CCObject*) {
@@ -180,4 +172,5 @@ class $modify(jdMS, ProfilePage) {
         auto str = static_cast<CCString*>(obj)->getCString();
         web::openLinkInBrowser(str);
     }
+
 };
