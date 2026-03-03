@@ -56,16 +56,11 @@ class $modify(jdMS, ProfilePage) {
         ProfilePage::loadPageFromUserInfo(score);
 
         auto req = web::WebRequest();
-        /*
-            .userAgent("MoreSocials 1.0 (Geode)")
-            .timeout(std::chrono::seconds(10))
-            .get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID));
-        */
 
         m_fields->listener.spawn(
-			req.get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID)),
-			[](web::WebResponse res) {
-				if(!res.ok()) return;
+            req.get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID)),
+            [this, score](web::WebResponse res) {
+                if(!res.ok()) return;
                 std::string body = res.string().unwrapOr("");
 
                 auto bg = this->m_mainLayer->getChildByID("background");
@@ -106,15 +101,13 @@ class $modify(jdMS, ProfilePage) {
                             } else {
                                 spr = CCSprite::createWithSpriteFrameName(info.png.c_str());
                             }
-                            spr->setScale(0.9f);
                             if (!spr) break;
+                            spr->setScale(0.9f);
                             auto item = CCMenuItemSpriteExtra::create(
                                 spr, this, menu_selector(jdMS::onSocial)
                             );
                             item->setID(fmt::format("{}_social", info.key).c_str());
                             item->setUserObject(CCString::create(link));
-                            // item->setPositionY(-y);
-                            // y += spr->getContentSize().height + 3.f;
                             moresocials->addChild(item);
                             break;
                         }
@@ -133,8 +126,6 @@ class $modify(jdMS, ProfilePage) {
                         moreBtn->setID("more-socials-button"_spr);
                     }
                 }
-    
-                // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
     
                 if (!tooNarrow) {
                     moresocials->setLayout(
@@ -155,8 +146,8 @@ class $modify(jdMS, ProfilePage) {
                     );
                     moresocials->setAnchorPoint({1.f, 0.f});
                 }
-			}
-		);
+            }
+        );
     }
 
     void onMore(CCObject*) {
@@ -182,5 +173,3 @@ class $modify(jdMS, ProfilePage) {
     }
 
 };
-
-
