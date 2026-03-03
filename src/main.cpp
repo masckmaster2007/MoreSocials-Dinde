@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/ProfilePage.hpp>
 #include <Geode/utils/web.hpp>
+#include <Geode/utils/async.hpp>
 #include <sstream>
 #include <vector>
 
@@ -48,7 +49,7 @@ static const std::vector<Social> socials = {
 
 class $modify(jdMS, ProfilePage) {
     struct Fields {
-        EventListener<web::WebTask> listener;
+        async::TaskHolder<WebResponse> listener;
     };
 
     void loadPageFromUserInfo(GJUserScore* score) {
@@ -181,3 +182,4 @@ class $modify(jdMS, ProfilePage) {
     }
 
 };
+
