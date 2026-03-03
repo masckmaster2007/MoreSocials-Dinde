@@ -54,109 +54,108 @@ class $modify(jdMS, ProfilePage) {
     void loadPageFromUserInfo(GJUserScore* score) {
         ProfilePage::loadPageFromUserInfo(score);
 
-        auto task = web::WebRequest()
+        auto req = web::WebRequest();
+        /*
             .userAgent("MoreSocials 1.0 (Geode)")
             .timeout(std::chrono::seconds(10))
             .get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID));
+        */
 
-        m_fields->listener.bind([this, score](web::WebTask::Event* ev) {
-            auto maybe = ev->getValue();
-            if (!maybe || !maybe->ok()) return;
+        m_fields->listener.spawn(
+			req.get(fmt::format("https://gdps.dimisaio.be/database/getMoreSocials.php?accountID={}", score->m_accountID)),
+			[](web::WebResponse res) {
+				if(!res.ok()) return;
+                std::string body = res.string().unwrapOr("");
 
-            std::string body = maybe->string().unwrapOr("");
-            //if (body.empty()) return;
-
-            auto bg = this->m_mainLayer->getChildByID("background");
-            if (!bg) return;
-            auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
-            if (!robsocials) return;
-            if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
-
-            float intendedXPos = robsocials->getPositionX() + 40.f;
-            bool tooNarrow = intendedXPos + 15.f > this->getContentWidth();
-
-            auto moresocials = CCMenu::create();
-            moresocials->setID("more-socials-menu"_spr);
-            if (!tooNarrow) {
-                moresocials->setPosition(intendedXPos, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
-                moresocials->setContentHeight(290.f); // content width gets handled by layout later
-            } else {
-                moresocials->setPosition(robsocials->getPositionX() + 21.f, bg->getContentHeight() + 38.f);
-                moresocials->setContentWidth(400.f); // content height gets handled by layout later
-            }
-            this->m_mainLayer->addChild(moresocials);
-
-            float y = 0.f;
-            std::istringstream ss(body);
-            std::string part;
-            while (std::getline(ss, part, ';')) {
-                auto eq = part.find('=');
-                if (eq == std::string::npos) continue;
-                auto key = part.substr(0, eq);
-                auto link = part.substr(eq + 1);
-                if (link.empty()) continue;
-
-                for (auto const& info : socials) {
-                    if (info.key == key) {
-                        CCSprite* spr = nullptr;
-                        if (info.isCustom) {
-                            spr = CCSprite::create(fmt::format("{}"_spr, info.png).c_str());
-                        } else {
-                            spr = CCSprite::createWithSpriteFrameName(info.png.c_str());
+                auto bg = this->m_mainLayer->getChildByID("background");
+                if (!bg) return;
+                auto robsocials = static_cast<CCMenu*>(getChildByIDRecursive("socials-menu"));
+                if (!robsocials) return;
+                if (getChildByIDRecursive("more-socials-menu"_spr)) { return; } // wah wah wah
+    
+                float intendedXPos = robsocials->getPositionX() + 40.f;
+                bool tooNarrow = intendedXPos + 15.f > this->getContentWidth();
+    
+                auto moresocials = CCMenu::create();
+                moresocials->setID("more-socials-menu"_spr);
+                if (!tooNarrow) {
+                    moresocials->setPosition(intendedXPos, this->m_mainLayer->getContentHeight() / 2.f); // might do better later
+                    moresocials->setContentHeight(290.f); // content width gets handled by layout later
+                } else {
+                    moresocials->setPosition(robsocials->getPositionX() + 21.f, bg->getContentHeight() + 38.f);
+                    moresocials->setContentWidth(400.f); // content height gets handled by layout later
+                }
+                this->m_mainLayer->addChild(moresocials);
+    
+                float y = 0.f;
+                std::istringstream ss(body);
+                std::string part;
+                while (std::getline(ss, part, ';')) {
+                    auto eq = part.find('=');
+                    if (eq == std::string::npos) continue;
+                    auto key = part.substr(0, eq);
+                    auto link = part.substr(eq + 1);
+                    if (link.empty()) continue;
+    
+                    for (auto const& info : socials) {
+                        if (info.key == key) {
+                            CCSprite* spr = nullptr;
+                            if (info.isCustom) {
+                                spr = CCSprite::create(fmt::format("{}"_spr, info.png).c_str());
+                            } else {
+                                spr = CCSprite::createWithSpriteFrameName(info.png.c_str());
+                            }
+                            spr->setScale(0.9f);
+                            if (!spr) break;
+                            auto item = CCMenuItemSpriteExtra::create(
+                                spr, this, menu_selector(jdMS::onSocial)
+                            );
+                            item->setID(fmt::format("{}_social", info.key).c_str());
+                            item->setUserObject(CCString::create(link));
+                            // item->setPositionY(-y);
+                            // y += spr->getContentSize().height + 3.f;
+                            moresocials->addChild(item);
+                            break;
                         }
-                        spr->setScale(0.9f);
-                        if (!spr) break;
-                        auto item = CCMenuItemSpriteExtra::create(
-                            spr, this, menu_selector(jdMS::onSocial)
-                        );
-                        item->setID(fmt::format("{}_social", info.key).c_str());
-                        item->setUserObject(CCString::create(link));
-                        // item->setPositionY(-y);
-                        // y += spr->getContentSize().height + 3.f;
-                        moresocials->addChild(item);
-                        break;
                     }
                 }
-            }
-
-            if (score->m_accountID == GJAccountManager::sharedState()->m_accountID) {
-                auto more = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
-                more->setID("more-socials-info"_spr);
-                more->setScale(0.65f);
-                if (more) {
-                    auto moreBtn = CCMenuItemSpriteExtra::create(
-                        more, this, menu_selector(jdMS::onMore)
-                    );
-                    moresocials->addChild(moreBtn);
-                    moreBtn->setID("more-socials-button"_spr);
+    
+                if (score->m_accountID == GJAccountManager::sharedState()->m_accountID) {
+                    auto more = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
+                    more->setID("more-socials-info"_spr);
+                    more->setScale(0.65f);
+                    if (more) {
+                        auto moreBtn = CCMenuItemSpriteExtra::create(
+                            more, this, menu_selector(jdMS::onMore)
+                        );
+                        moresocials->addChild(moreBtn);
+                        moreBtn->setID("more-socials-button"_spr);
+                    }
                 }
-            }
-
-            // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
-
-            if (!tooNarrow) {
-                moresocials->setLayout(
-                    geode::ColumnLayout::create()
-                        ->setGap(3.f)
-                        ->setAutoScale(true)
-                        ->setAxisReverse(true)
-                        ->setCrossAxisOverflow(true)
-                );
-            } else {
-                moresocials->setLayout(
-                    geode::RowLayout::create()
-                        ->setGap(3.f)
-                        ->setAutoScale(true)
-                        ->setAxisReverse(true)
-                        ->setCrossAxisOverflow(true)
-                        ->setAxisAlignment(AxisAlignment::End)
-                );
-                moresocials->setAnchorPoint({1.f, 0.f});
-            }
-
-        });
-
-        m_fields->listener.setFilter(task);
+    
+                // moresocials->alignItemsVerticallyWithPadding(3.f); // jarvis what the hell i thought the geode docs taught you better than to use outdated cocos functions. geode::Layout* existed for a reason dammit
+    
+                if (!tooNarrow) {
+                    moresocials->setLayout(
+                        geode::ColumnLayout::create()
+                            ->setGap(3.f)
+                            ->setAutoScale(true)
+                            ->setAxisReverse(true)
+                            ->setCrossAxisOverflow(true)
+                    );
+                } else {
+                    moresocials->setLayout(
+                        geode::RowLayout::create()
+                            ->setGap(3.f)
+                            ->setAutoScale(true)
+                            ->setAxisReverse(true)
+                            ->setCrossAxisOverflow(true)
+                            ->setAxisAlignment(AxisAlignment::End)
+                    );
+                    moresocials->setAnchorPoint({1.f, 0.f});
+                }
+			}
+		);
     }
 
     void onMore(CCObject*) {
@@ -180,4 +179,5 @@ class $modify(jdMS, ProfilePage) {
         auto str = static_cast<CCString*>(obj)->getCString();
         web::openLinkInBrowser(str);
     }
+
 };
