@@ -49,7 +49,7 @@ static const std::vector<Social> socials = {
 
 class $modify(jdMS, ProfilePage) {
     struct Fields {
-        async::TaskHolder<WebResponse> listener;
+        async::TaskHolder<web::WebResponse> listener;
     };
 
     void loadPageFromUserInfo(GJUserScore* score) {
@@ -182,4 +182,5 @@ class $modify(jdMS, ProfilePage) {
     }
 
 };
+
 
